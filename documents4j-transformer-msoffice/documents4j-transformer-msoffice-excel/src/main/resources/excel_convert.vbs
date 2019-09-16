@@ -30,9 +30,16 @@ Function ConvertFile( inputFile, outputFile, formatEnumeration )
 
     ' Attempt to open the source document.
     On Error Resume Next
-    Set excelDocument = excelApplication.Workbooks.Open(inputFile, , True, , , , , , , , , , , , 2)
+    excelApplication.Iteration = True
+    excelApplication.MaxIterations = 100
+    Set excelDocument = excelApplication.Workbooks.Open(inputFile, , False, , , , , , , , , , , , 0)
     If Err <> 0 Then
         WScript.Quit -2
+    End If
+    excelApplication.CalculateFull
+    excelApplication.ActiveSheet.Calculate
+    If Err <> 0 Then
+        WScript.Quit -3
     End If
     On Error GoTo 0
 
